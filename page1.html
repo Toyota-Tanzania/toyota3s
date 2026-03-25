@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toyota Tanzania — Outstanding Receivables | Executive Report · March 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --ink: #0f0e0c;
+  --ink2: #3a3835;
+  --ink3: #7a7672;
+  --paper: #faf8f4;
+  --paper2: #f0ede6;
+  --paper3: #e6e2d8;
+  --gold: #b8860b;
+  --gold-light: #f5e6b0;
+  --red: #c0392b;
+  --red-light: #fdecea;
+  --amber: #b7730a;
+  --amber-light: #fef3de;
+  --green: #1a6b3c;
+  --green-light: #e6f4ec;
+  --blue: #1a4a7a;
+  --blue-light: #e6eef8;
+  --border: #d8d3c8;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── PRINT ─── */
+@media print {
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  body { background: white; }
+  .section { box-shadow: none !important; }
+}
+
+/* ─── LAYOUT ─── */
+.page { max-width: 1100px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ─── HEADER ─── */
+.report-header {
+  border-bottom: 2px solid var(--ink);
+  padding: 3rem 0 2rem;
+  margin-bottom: 3rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 2rem;
+}
+.report-logo {
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: .75rem;
+}
+.report-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.report-title span { color: var(--gold); }
+.report-meta { text-align: right; }
+.report-date {
+  font-size: 13px;
+  color: var(--ink3);
+  margin-bottom: .35rem;
+  font-family: var(--font-mono);
+}
+.report-stamp {
+  display: inline-block;
+  border: 1.5px solid var(--red);
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+}
+
+/* ─── KPI STRIP ─── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+.kpi-cell {
+  padding: 1.5rem 1.25rem;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.kpi-cell:last-child { border-right: none; }
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: .5rem;
+}
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: .35rem;
+}
+.kpi-value.danger { color: var(--red); }
+.kpi-value.warn { color: var(--amber); }
+.kpi-value.ok { color: var(--green); }
+.kpi-sub {
+  font-size: 11px;
+  color: var(--ink3);
+}
+.kpi-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-cell.danger::before { background: var(--red); }
+.kpi-cell.warn::before { background: var(--amber); }
+.kpi-cell.ok::before { background: var(--green); }
+
+/* ─── SECTIONS ─── */
+.section {
+  margin-bottom: 3rem;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 600;
+  min-width: 28px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.section-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+}
+.badge-red { background: var(--red-light); color: var(--red); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-gray { background: var(--paper3); color: var(--ink3); }
+
+/* ─── INSIGHT CARDS ─── */
+.insight-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.insight-card {
+  background: var(--paper);
+  padding: 1.25rem 1.5rem;
+  border-left: 3px solid transparent;
+}
+.insight-card.red { border-left-color: var(--red); }
+.insight-card.amber { border-left-color: var(--amber); }
+.insight-card.blue { border-left-color: var(--blue); }
+.insight-card.green { border-left-color: var(--green); }
+.insight-icon { font-size: 15px; margin-right: 6px; }
+.insight-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: .5rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.insight-body {
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+
+/* ─── CHARTS ─── */
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.chart-box {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  padding: 1.25rem;
+}
+.chart-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 1rem;
+}
+.chart-wrap { position: relative; width: 100%; height: 220px; }
+
+/* ─── AGING VISUAL ─── */
+.aging-visual { margin-bottom: 2rem; }
+.aging-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 90px 90px;
+  align-items: center;
+  gap: 1rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--paper3);
+}
+.aging-row:last-child { border-bottom: none; }
+.aging-bucket { font-size: 12px; color: var(--ink2); font-family: var(--font-mono); }
+.aging-bar-outer {
+  height: 16px;
+  background: var(--paper2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.aging-bar-inner {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+.aging-amount { font-size: 12px; font-family: var(--font-mono); text-align: right; font-weight: 500; }
+.aging-pct { font-size: 11px; font-family: var(--font-mono); text-align: right; color: var(--ink3); }
+
+/* ─── TABLES ─── */
+.tbl-wrap { overflow-x: auto; }
+table.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.report-table thead tr {
+  background: var(--ink);
+  color: var(--paper);
+}
+.report-table thead th {
+  padding: 9px 12px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.report-table thead th.r { text-align: right; }
+.report-table tbody tr:nth-child(odd) { background: var(--paper); }
+.report-table tbody tr:nth-child(even) { background: var(--paper2); }
+.report-table tbody tr:hover { background: var(--gold-light); }
+.report-table tbody td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--paper3);
+  vertical-align: middle;
+  color: var(--ink);
+}
+.report-table tbody td.r {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.report-table tbody td.mono { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink3); }
+.risk-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+}
+.r-critical { background: var(--red-light); color: var(--red); }
+.r-high { background: var(--amber-light); color: var(--amber); }
+.r-medium { background: var(--blue-light); color: var(--blue); }
+.r-low { background: var(--green-light); color: var(--green); }
+
+/* ─── AGING MINI BAR ─── */
+.mini-aging {
+  display: flex;
+  height: 8px;
+  border-radius: 2px;
+  overflow: hidden;
+  width: 80px;
+}
+
+/* ─── CALLOUT BOX ─── */
+.callout {
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  padding: 1rem 1.25rem;
+  font-size: 12.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+.callout strong { color: var(--ink); font-weight: 600; }
+
+/* ─── CREDIT TABLE ─── */
+.credit-amount { color: var(--green); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+
+/* ─── FOOTER ─── */
+.report-footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.footer-left {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--ink3);
+}
+.footer-right {
+  text-align: right;
+  font-size: 11px;
+  color: var(--ink3);
+  font-family: var(--font-mono);
+  line-height: 1.8;
+}
+
+/* ─── ACTION TABLE ─── */
+.action-table table { font-size: 12.5px; }
+.action-table td { padding: 9px 12px; }
+.priority-num {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  width: 28px;
+}
+
+/* ─── PRINT BUTTON ─── */
+.print-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: .05em;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.print-btn:hover { background: var(--gold); color: var(--ink); }
+@media print { .print-btn { display: none; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">⎙ Print / Save PDF</button>
+
+<div class="page">
+
+<!-- ══ HEADER ══ -->
+<header class="report-header">
+  <div>
+    <div class="report-logo">Toyota Tanzania Ltd &nbsp;·&nbsp; Finance Division</div>
+    <h1 class="report-title">Outstanding <span>Receivables</span><br>Executive Report</h1>
+  </div>
+  <div class="report-meta">
+    <div class="report-date">Report date: 25 March 2026</div>
+    <div class="report-date">Cut-off: 24 March 2026</div>
+    <div class="report-date" style="margin-bottom:.75rem">Prepared for: CFO &amp; CEO</div>
+    <div class="report-stamp">Confidential</div>
+  </div>
+</header>
+
+<!-- ══ KPI STRIP ══ -->
+<div class="kpi-strip">
+  <div class="kpi-cell danger">
+    <div class="kpi-label">Net outstanding</div>
+    <div class="kpi-value danger">TZS 75.2B</div>
+    <div class="kpi-sub">3,032 accounts · 5,130 records</div>
+  </div>
+  <div class="kpi-cell danger">
+    <div class="kpi-label">Overdue &gt; 1 year</div>
+    <div class="kpi-value danger">TZS 35.5B</div>
+    <div class="kpi-sub">47% of total — provisioning required</div>
+  </div>
+  <div class="kpi-cell warn">
+    <div class="kpi-label">Collection efficiency</div>
+    <div class="kpi-value warn">32.3%</div>
+    <div class="kpi-sub">Benchmark: 65–80% (automotive)</div>
+  </div>
+  <div class="kpi-cell warn">
+    <div class="kpi-label">Credit balances held</div>
+    <div class="kpi-value warn">TZS 27.0B</div>
+    <div class="kpi-sub">2,141 accounts in credit position</div>
+  </div>
+</div>
+
+<!-- ══ SECTION 1: STRATEGIC INSIGHTS ══ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Strategic Assessment</h2>
+    <span class="section-badge badge-red">Action Required</span>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight-card red">
+      <div class="insight-title">⚠ Extreme Concentration Risk</div>
+      <p class="insight-body">Government Procurement Services Agency (Acct 61000) alone holds TZS 37B — <strong>49% of total net outstanding</strong>. The top 3 accounts represent over 85%. A single payment delay or dispute at GPSA would critically impair liquidity and debt service capacity.</p>
+    </div>
+    <div class="insight-card red">
+      <div class="insight-title">⚠ Chronic Long-Aged Debt — IFRS 9 Exposure</div>
+      <p class="insight-body">TZS 35.5B (47%) is over 1 year old. TZS 2.3B+ dates back more than 3 years across 7 accounts exceeding TZS 1B each. Under IFRS 9 Expected Credit Loss (ECL) model, <strong>significant impairment provisions are required</strong> and will impact FY2026 earnings.</p>
+    </div>
+    <div class="insight-card amber">
+      <div class="insight-title">▲ Below-Benchmark Collection Efficiency</div>
+      <p class="insight-body">At 32.3%, collection performance is less than half the automotive sector benchmark of 65–80%. This implies <strong>TZS 30–40B in recoverable receivables</strong> that require structured recovery programs, dedicated account managers, and escalation protocols.</p>
+    </div>
+    <div class="insight-card amber">
+      <div class="insight-title">▲ Government Sector Concentration</div>
+      <p class="insight-body">Ministries (Defence, Health, Minerals, President's Office) and state agencies (TRA, GPSA, National Service) account for a disproportionate share of long-aged debt. Government debtors require <strong>formal demand letters, ministerial engagement, and Treasury offset mechanisms</strong>.</p>
+    </div>
+    <div class="insight-card blue">
+      <div class="insight-title">ℹ Credit Balance Liability — TZS 27B</div>
+      <p class="insight-body">TZS 27.0B held across 2,141 accounts in credit may include unprocessed payments, pricing adjustments, or returned goods. Bulyanhulu Gold (TZS 1.75B) and Swala Solutions (TZS 1.16B) are the largest. <strong>Reconciliation and netting should precede any refunds</strong>.</p>
+    </div>
+    <div class="insight-card green">
+      <div class="insight-title">✓ Mining Sector — Recovery Opportunity</div>
+      <p class="insight-body">Geita Gold Mining (2 entities), North Mara Gold Mine, and several Chinese civil construction firms show high invoice volumes with genuine commercial activity. <strong>Structured payment plans and letters of credit</strong> could unlock TZS 3–5B in recoveries within 90 days.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 2: AGING ANALYSIS ══ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Aging Distribution</h2>
+    <span class="section-badge badge-red">67.9% Aged 3yr+</span>
+  </div>
+
+  <div class="chart-row">
+    <div class="chart-box">
+      <div class="chart-label">Outstanding by aging bucket (TZS billions)</div>
+      <div class="chart-wrap"><canvas id="agingBar"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-label">Aging composition (%)</div>
+      <div class="chart-wrap"><canvas id="agingDoughnut"></canvas></div>
+    </div>
+  </div>
+
+  <div class="aging-visual">
+    <div class="aging-row" style="font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding-bottom:.3rem">
+      <span>Bucket</span><span></span><span style="text-align:right;display:block">Amount</span><span style="text-align:right;display:block">Share</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">0 – 30 days</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:2%;background:#1a6b3c"></div></div>
+      <span class="aging-amount">74.5B</span>
+      <span class="aging-pct">2.0%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">31 – 60 days</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:3.2%;background:#378ADD"></div></div>
+      <span class="aging-amount">118.7B</span>
+      <span class="aging-pct">3.2%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">61 – 90 days</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:1.3%;background:#63C4F1"></div></div>
+      <span class="aging-amount">46.9B</span>
+      <span class="aging-pct">1.3%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">91 – 180 days</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:4.8%;background:#EF9F27"></div></div>
+      <span class="aging-amount">176.0B</span>
+      <span class="aging-pct">4.8%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">181 – 365 days</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:9.7%;background:#D85A30"></div></div>
+      <span class="aging-amount">360.7B</span>
+      <span class="aging-pct">9.7%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">1 – 2 years</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:13.1%;background:#E24B4A"></div></div>
+      <span class="aging-amount">486.2B</span>
+      <span class="aging-pct">13.1%</span>
+    </div>
+    <div class="aging-row">
+      <span class="aging-bucket">2 – 3 years</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:14.5%;background:#A32D2D"></div></div>
+      <span class="aging-amount">537.8B</span>
+      <span class="aging-pct">14.5%</span>
+    </div>
+    <div class="aging-row" style="font-weight:600">
+      <span class="aging-bucket" style="color:var(--red)">Over 3 years</span>
+      <div class="aging-bar-outer"><div class="aging-bar-inner" style="width:67.9%;background:#501313"></div></div>
+      <span class="aging-amount" style="color:var(--red)">2,521.9B</span>
+      <span class="aging-pct" style="color:var(--red)">67.9%</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>CFO Provisioning Note:</strong> Under IFRS 9 ECL methodology, debt aged 1–3 years typically requires 25–75% provision, and debt over 3 years may require up to 100% write-off assessment. At current aging profile, estimated provisioning requirement is <strong>TZS 15–25B</strong>, which will materially impact FY2026 reported earnings. Audit committee briefing recommended before year-end close.
+  </div>
+</section>
+
+<!-- ══ SECTION 3: TOP 30 DEBTORS ══ -->
+<section class="section page-break">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Top 30 Debtors</h2>
+    <span class="section-badge badge-amber">Ranked by Net Outstanding</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="report-table" id="top30table">
+      <thead>
+        <tr>
+          <th>Acct</th>
+          <th>Customer name</th>
+          <th class="r">Outstanding</th>
+          <th class="r">Current</th>
+          <th class="r">31–90d</th>
+          <th class="r">91–365d</th>
+          <th class="r">&gt;1 year</th>
+          <th class="r">Invoices</th>
+          <th class="r">Oldest (d)</th>
+          <th>Risk</th>
+          <th>Aging</th>
+        </tr>
+      </thead>
+      <tbody id="top30body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ SECTION 4: RISK REGISTER ══ -->
+<section class="section page-break">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Risk Register &amp; Escalation Plan</h2>
+    <span class="section-badge badge-red">14 Accounts — Immediate Action</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Acct</th>
+          <th>Customer</th>
+          <th class="r">Outstanding</th>
+          <th class="r">3yr+ Debt</th>
+          <th>Risk</th>
+          <th>Recommended Action</th>
+          <th>Owner</th>
+          <th>Timeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">61000</td><td>Government Procurement Services Agency</td><td class="r" style="color:var(--red);font-weight:600">37.0B</td><td class="r" style="color:var(--red)">691.2B</td><td><span class="risk-pill r-critical">Critical</span></td><td>CEO/Board escalation. Treasury offset mechanism. Formal debt acknowledgement deed.</td><td>CEO + CFO</td><td>7 days</td></tr>
+        <tr><td class="mono">08284</td><td>Salute Finance Ltd (Leasing)</td><td class="r" style="color:var(--red);font-weight:600">16.9B</td><td class="r" style="color:var(--red)">232.4B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Leasing portfolio review. Security enforcement. Restructure or legal recovery.</td><td>CFO + Legal</td><td>14 days</td></tr>
+        <tr><td class="mono">60448</td><td>Sunbeam Auto Limited (Parts)</td><td class="r" style="color:var(--red);font-weight:600">10.0B</td><td class="r" style="color:var(--red)">22.5B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Credit stop. Immediate demand letter. Offset against parts supply account.</td><td>Finance + Sales</td><td>7 days</td></tr>
+        <tr><td class="mono">00315</td><td>City Motors (Tanzania) Ltd</td><td class="r" style="color:var(--red);font-weight:600">6.8B</td><td class="r" style="color:var(--red)">18.4B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Credit facility suspension. Senior management meeting. Legal demand.</td><td>CFO</td><td>14 days</td></tr>
+        <tr><td class="mono">02110</td><td>Geita Gold Mining Limited</td><td class="r" style="color:var(--red);font-weight:600">1.1B</td><td class="r" style="color:var(--red)">4.4B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Structured payment plan. Mine operating schedule alignment. Quarterly settlement.</td><td>Key Accounts</td><td>30 days</td></tr>
+        <tr><td class="mono">08749</td><td>Geita Gold Mining Limited.</td><td class="r" style="color:var(--red);font-weight:600">1.0B</td><td class="r" style="color:var(--red)">31.8B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Consolidate with 02110. Joint payment plan. Consider write-off assessment for 3yr+ portion.</td><td>Key Accounts</td><td>30 days</td></tr>
+        <tr><td class="mono">60590</td><td>Yapi Merkezi (Construction)</td><td class="r" style="color:var(--amber);font-weight:600">670.5M</td><td class="r" style="color:var(--red)">35.2B</td><td><span class="risk-pill r-critical">Critical</span></td><td>Project completion-linked payment agreement. Embassy/diplomatic channel engagement.</td><td>CFO + Legal</td><td>21 days</td></tr>
+        <tr><td class="mono">07257</td><td>President's Office</td><td class="r" style="color:var(--amber);font-weight:600">915.7M</td><td class="r" style="color:var(--red)">76.5B</td><td><span class="risk-pill r-high">High</span></td><td>Formal demand via MoF Treasury. Budget allocation request. Ministerial engagement.</td><td>CEO</td><td>30 days</td></tr>
+        <tr><td class="mono">61182</td><td>Swala Solutions Ltd</td><td class="r" style="color:var(--amber);font-weight:600">725.1M</td><td class="r" style="color:var(--red)">26.8B</td><td><span class="risk-pill r-high">High</span></td><td>Account reconciliation. Demand letter. Credit facility suspended pending full review.</td><td>Finance</td><td>14 days</td></tr>
+        <tr><td class="mono">60509</td><td>Sunbeam Auto (Motor Vehicles)</td><td class="r" style="color:var(--amber);font-weight:600">556.0M</td><td class="r" style="color:var(--red)">8.4B</td><td><span class="risk-pill r-high">High</span></td><td>Consolidate with 60448. Combined credit stop and demand. Net against stock held.</td><td>Finance + Sales</td><td>7 days</td></tr>
+        <tr><td class="mono">00081</td><td>President's Office (2)</td><td class="r" style="color:var(--amber);font-weight:600">319.9M</td><td class="r" style="color:var(--red)">319.9M</td><td><span class="risk-pill r-high">High</span></td><td>Treasury engagement. Formal demand via MoF. Government budget cycle alignment.</td><td>CEO</td><td>30 days</td></tr>
+        <tr><td class="mono">00031</td><td>Ministry of Minerals</td><td class="r" style="color:var(--amber);font-weight:600">307.0M</td><td class="r" style="color:var(--red)">607.4M</td><td><span class="risk-pill r-high">High</span></td><td>Ministry engagement at PS level. Budget allocation request for FY2026/27.</td><td>CEO + Finance</td><td>30 days</td></tr>
+        <tr><td class="mono">08758</td><td>China Railway 15 Bureau Group</td><td class="r" style="color:var(--amber);font-weight:600">290.4M</td><td class="r" style="color:var(--red)">4.9B</td><td><span class="risk-pill r-high">High</span></td><td>Project completion status review. Embassy liaison. Payment against milestone completion.</td><td>Key Accounts</td><td>21 days</td></tr>
+        <tr><td class="mono">02110</td><td>Tanzania Revenue Authority</td><td class="r" style="color:var(--amber);font-weight:600">744.4M</td><td class="r" style="color:var(--red)">1.6B</td><td><span class="risk-pill r-high">High</span></td><td>Government-to-government reconciliation. Explore TRA offset against tax obligations.</td><td>CFO</td><td>30 days</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ SECTION 5: CREDIT BALANCES ══ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Credit Balances — Liability Review</h2>
+    <span class="section-badge badge-blue">TZS 27.0B Held</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Acct</th>
+          <th>Customer</th>
+          <th class="r">Credit Balance (TZS)</th>
+          <th>Nature</th>
+          <th>Recommended Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="mono">01626</td><td>Bulyanhulu Gold Mine Ltd</td><td class="r credit-amount">1,749,858,299</td><td><span class="risk-pill r-medium">Overpayment</span></td><td>Confirm balance · Offset against live invoices · Return if no offset</td></tr>
+        <tr><td class="mono">02484</td><td>Swala Solutions Limited</td><td class="r credit-amount">1,163,659,387</td><td><span class="risk-pill r-medium">Netting opp.</span></td><td>Net against TZS 725M outstanding on Acct 61182</td></tr>
+        <tr><td class="mono">61005</td><td>Tanzania Women Lawyers Association</td><td class="r credit-amount">795,000,000</td><td><span class="risk-pill badge-gray">Investigate</span></td><td>Investigate source · Possible duplicate payment or deposit</td></tr>
+        <tr><td class="mono">62005</td><td>Libra Finance Limited</td><td class="r credit-amount">795,000,000</td><td><span class="risk-pill badge-gray">Investigate</span></td><td>Investigate source · Round-number balance suggests deposit or prepayment</td></tr>
+        <tr><td class="mono">60741</td><td>Mtibwa Sugar Estate Ltd</td><td class="r credit-amount">666,376,280</td><td><span class="risk-pill r-medium">Overpayment</span></td><td>Confirm · Net against any future orders or return</td></tr>
+        <tr><td class="mono">08515</td><td>Judiciary of Tanzania</td><td class="r credit-amount">627,051,985</td><td><span class="risk-pill r-high">Gov. agency</span></td><td>Formal reconciliation with Judiciary Finance · Treasury notification</td></tr>
+        <tr><td class="mono">99986</td><td>VSB 2012</td><td class="r credit-amount">582,988,103</td><td><span class="risk-pill badge-gray">Investigate</span></td><td>Identify entity · Confirm account status · Internal audit review</td></tr>
+        <tr><td class="mono">61006</td><td>Sanlam Life Insurance</td><td class="r credit-amount">537,616,155</td><td><span class="risk-pill r-medium">Netting opp.</span></td><td>Confirm nature · Explore offset against insurance premiums receivable</td></tr>
+        <tr><td class="mono">62001</td><td>Rural Water Supply &amp; Sanitation</td><td class="r credit-amount">398,321,500</td><td><span class="risk-pill r-high">Gov. agency</span></td><td>Government reconciliation · MoF notification required</td></tr>
+        <tr><td class="mono">60945</td><td>CRJE East Africa (TANROADS)</td><td class="r credit-amount">386,543,547</td><td><span class="risk-pill badge-gray">Investigate</span></td><td>Project reconciliation · Confirm against road project invoicing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>CFO Note:</strong> Total credit exposure of TZS 27.0B across 2,141 accounts represents a <strong>potential refund liability</strong> on the balance sheet. Prior to any refunds, a full reconciliation sweep should be completed to identify netting opportunities. Several government-agency credits may be eligible for <strong>Treasury offset</strong> against outstanding receivables.
+  </div>
+</section>
+
+<!-- ══ SECTION 6: RECOMMENDED ACTIONS ══ -->
+<section class="section page-break">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">CFO &amp; CEO Action Plan</h2>
+    <span class="section-badge badge-red">Immediate — 90 Day Roadmap</span>
+  </div>
+
+  <div class="tbl-wrap action-table">
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th style="width:32px">#</th>
+          <th>Action</th>
+          <th>Expected Outcome</th>
+          <th>Owner</th>
+          <th>Deadline</th>
+          <th>Est. Recovery</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="priority-num">1</td>
+          <td><strong>GPSA Board Escalation</strong> — CEO to raise with GPSA Director General and CC Ministry of Finance. Obtain formal debt acknowledgement deed. Explore government-to-government Treasury payment mechanism.</td>
+          <td>Secure TZS 5–15B payment commitment from GPSA</td>
+          <td>CEO + CFO</td>
+          <td>7 days</td>
+          <td style="color:var(--green);font-family:var(--font-mono)">5–15B</td>
+        </tr>
+        <tr>
+          <td class="priority-num">2</td>
+          <td><strong>IFRS 9 Provision Assessment</strong> — Engage external auditors to quantify ECL provision on 3yr+ debt (TZS 2,521B gross). Assess write-off candidates and board approval for provision charge.</td>
+          <td>Regulatory compliance · Accurate FY2026 financial statements</td>
+          <td>CFO + Audit</td>
+          <td>30 days</td>
+          <td style="color:var(--ink3);font-family:var(--font-mono)">—</td>
+        </tr>
+        <tr>
+          <td class="priority-num">3</td>
+          <td><strong>Credit Stop — Sunbeam Auto</strong> — Immediately suspend all credit to Accounts 60448 and 60509 (combined TZS 10.6B outstanding). Issue formal demand. Net against any stock/parts deposits held.</td>
+          <td>Halt further exposure · Initiate TZS 2–4B recovery</td>
+          <td>Finance + Sales</td>
+          <td>7 days</td>
+          <td style="color:var(--green);font-family:var(--font-mono)">2–4B</td>
+        </tr>
+        <tr>
+          <td class="priority-num">4</td>
+          <td><strong>Credit Balance Netting Exercise</strong> — Full reconciliation of TZS 27B credit balances. Net Swala Solutions credit (TZS 1.16B) against outstanding. Identify TZS 3–5B in netting opportunities before processing any refunds.</td>
+          <td>Reduce net outstanding · Eliminate refund liability</td>
+          <td>CFO + Finance</td>
+          <td>21 days</td>
+          <td style="color:var(--green);font-family:var(--font-mono)">3–5B</td>
+        </tr>
+        <tr>
+          <td class="priority-num">5</td>
+          <td><strong>Mining Sector Payment Plans</strong> — Engage Geita Gold (both entities), North Mara Gold Mine, and China construction firms. Negotiate structured monthly payment plans with security arrangements (performance bonds or bank guarantees).</td>
+          <td>Formalise TZS 3–5B in structured recovery commitments</td>
+          <td>Key Accounts + Legal</td>
+          <td>30 days</td>
+          <td style="color:var(--green);font-family:var(--font-mono)">3–5B</td>
+        </tr>
+        <tr>
+          <td class="priority-num">6</td>
+          <td><strong>Government Debt Programme</strong> — Engage Ministry of Finance for multi-ministry debt offset programme covering President's Office (TZS 1.2B combined), Ministry of Minerals (307M), TRA (744M), and National Service (2.3B).</td>
+          <td>Government acknowledgement of TZS 4–5B in obligations</td>
+          <td>CEO + MoF</td>
+          <td>45 days</td>
+          <td style="color:var(--green);font-family:var(--font-mono)">4–5B</td>
+        </tr>
+        <tr>
+          <td class="priority-num">7</td>
+          <td><strong>Collections KPI Dashboard</strong> — Implement weekly CFO reporting on collections: Days Sales Outstanding (DSO), cash collected vs. target, overdue movements, and new credit approvals. Set collection efficiency target of 60% within 12 months.</td>
+          <td>Measurable improvement in collection culture and DSO</td>
+          <td>CFO + IT</td>
+          <td>60 days</td>
+          <td style="color:var(--ink3);font-family:var(--font-mono)">Systemic</td>
+        </tr>
+        <tr>
+          <td class="priority-num">8</td>
+          <td><strong>Credit Policy Overhaul</strong> — Review credit limits, payment terms, and approval thresholds. Introduce mandatory security deposits for accounts with balances exceeding TZS 500M. Implement automated credit holds at 90 days overdue.</td>
+          <td>Prevent recurrence of chronic long-aged debt</td>
+          <td>CFO</td>
+          <td>90 days</td>
+          <td style="color:var(--ink3);font-family:var(--font-mono)">Preventive</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:1.5rem">
+    <strong>90-Day Recovery Target:</strong> If actions 1–6 are executed within the stated timelines, estimated cash recovery of <strong>TZS 17–34B</strong> is achievable within 90 days. This would improve collection efficiency from 32.3% to approximately 50–55% and materially strengthen liquidity and working capital position.
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="report-footer">
+  <div class="footer-left">
+    Toyota Tanzania Ltd<br>
+    <span style="font-size:11px;color:var(--ink3)">Outstanding Receivables — Executive Report</span>
+  </div>
+  <div class="footer-right">
+    Report generated: 25 March 2026<br>
+    Data cut-off: 24 March 2026<br>
+    Classification: Confidential — CFO &amp; CEO Only<br>
+    Source: Outstanding items (SL) · 103,364 line items
+  </div>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+// Populate Top 30 table
+const top30 = [
+  ['61000','Government Procurement Services Agency',36982971569,44039615094,51608211319,211454085640,691171857216,5214,1903],
+  ['08284','Salute Finance Ltd (Leasing)',16910898477,479733861,3281084258,25774670669,232368830512,2450,5080],
+  ['60448','Sunbeam Auto Limited — Parts',10043309779,0,0,0,22520702678,661,3555],
+  ['00315','City Motors (Tanzania) Ltd',6849616282,0,0,0,18440732025,709,3736],
+  ['99024','Toyota Warranty',3513255506,204159733,440098904,1738796505,1197882848,1822,544],
+  ['60898','The National Service',2332195415,0,1865756332,2819169327,0,19,329],
+  ['61575','China Railway Construction Engineering',2097625962,2542038242,0,2406492991,720568183,24,481],
+  ['02486','Karimjee Value Chain Limited',1134374005,0,8327461,23640417,1142778565,56,1126],
+  ['02110','Geita Gold Mining Limited',1122724339,0,1830764365,6836905578,4379664361,215,2592],
+  ['08749','Geita Gold Mining Limited.',1036609089,0,0,6662504624,31776172612,325,3438],
+  ["07257","President's Office",915672319,1931313618,5361199089,61172120125,76452095718,704,6862],
+  ['60104','National Microfinance Bank (NMB)',791504342,1978760856,743955765,5933204239,0,35,209],
+  ['61625','Transrail Lighting Limited',762833796,940187649,0,0,0,6,9],
+  ['01226','Tanzania Revenue Authority',744363486,66173057,118522076,266233416,1564261442,896,3677],
+  ['61182','Swala Solutions Ltd',725081780,4100663286,841131378,10851483869,26836400256,182,1462],
+  ['61209','Karimjee Jivanjee Limited',714872550,0,0,714872550,0,4,309],
+  ['60590','Yapi Merkezi Insaat (Construction)',670547480,0,0,0,35232586551,283,3232],
+  ['60509','Sunbeam Auto — Motor Vehicles',555988056,0,0,0,8387643033,1587,3494],
+  ['04026','Alliance Insurance Limited',550893414,147611919,318867828,200617326,0,125,356],
+  ['62006','S Rajab Seif',537616155,0,537616155,0,0,1,35],
+  ['61810','Sun & Lion Limited',442372502,0,0,58150000,520407282,1,401],
+  ['04027','Salute Finance Limited',366157931,165987786,416177543,744788711,6778816,1311,407],
+  ['00081',"President's Office (2)",319883890,0,0,0,319883890,70,4926],
+  ['00210','TTC EX JAP REC',319348199,0,0,717978210,2628266832,12,635],
+  ['00031','Ministry Of Minerals',307012266,0,0,5784029,607387367,287,4872],
+  ['08758','China Railway 15 Bureau Group Corp.',290384756,0,309914680,1288644264,4925725541,57,4172],
+  ['60847','Zem Development (T) Co. Limited',262203245,0,0,1750671966,136700660,7,652],
+  ['07275','Sagera Estates Ltd',253338587,0,0,253338587,0,1,208],
+  ['01225','Tanzania Revenue Authority — Customs',236091341,6275297,7421893,50719679,184464983,85,4055],
+  ['00264','TO Permanent Secretary',217828985,0,0,0,349407499,117,3722],
+];
+
+function fmtB(n){
+  if(!n||n===0)return '—';
+  const a=Math.abs(n);
+  let s;
+  if(a>=1e9) s=(a/1e9).toFixed(1)+'B';
+  else if(a>=1e6) s=(a/1e6).toFixed(0)+'M';
+  else if(a>=1e3) s=(a/1e3).toFixed(0)+'K';
+  else s=a.toFixed(0);
+  return (n<0?'-':'')+s;
+}
+function getRisk(out,old){
+  const p=old/Math.max(out,1);
+  if(out>5e9||p>0.7)return ['CRITICAL','r-critical'];
+  if(out>1e9||p>0.4)return ['HIGH','r-high'];
+  if(p>0.2)return ['MEDIUM','r-medium'];
+  return ['LOW','r-low'];
+}
+const tb=document.getElementById('top30body');
+top30.forEach(r=>{
+  const out=r[2],curr=r[3],mid=r[4],late=r[5],old=r[6];
+  const total=curr+mid+late+old||1;
+  const [risk,rc]=getRisk(out,old);
+  const c1=curr/total*100,c2=mid/total*100,c3=late/total*100,c4=old/total*100;
+  tb.innerHTML+=`<tr>
+    <td class="mono">${r[0]}</td>
+    <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12.5px">${r[1]}</td>
+    <td class="r" style="font-weight:600${out>1e9?';color:var(--red)':out>5e8?';color:var(--amber)':''}">${fmtB(out)}</td>
+    <td class="r">${curr>0?fmtB(curr):'—'}</td>
+    <td class="r">${mid>0?fmtB(mid):'—'}</td>
+    <td class="r">${late>0?fmtB(late):'—'}</td>
+    <td class="r" style="${old>0?'color:var(--red);font-weight:600':''}"><b>${old>0?fmtB(old):'—'}</b></td>
+    <td class="r">${r[7].toLocaleString()}</td>
+    <td class="r" style="${r[8]>730?'color:var(--red)':''}">${r[8].toLocaleString()}</td>
+    <td><span class="risk-pill ${rc}">${risk}</span></td>
+    <td><div class="mini-aging">
+      <div style="width:${c1}%;background:#1a6b3c"></div>
+      <div style="width:${c2}%;background:#EF9F27"></div>
+      <div style="width:${c3}%;background:#D85A30"></div>
+      <div style="width:${c4}%;background:#c0392b"></div>
+    </div></td>
+  </tr>`;
+});
+
+// Charts
+const agingLabels=['0–30d','31–60d','61–90d','91–180d','181–365d','1–2yr','2–3yr','3yr+'];
+const agingVals=[74.5,118.7,46.9,176.0,360.7,486.2,537.8,2521.9];
+const agingColors=['#1a6b3c','#378ADD','#63C4F1','#EF9F27','#D85A30','#E24B4A','#A32D2D','#501313'];
+
+new Chart(document.getElementById('agingBar'),{
+  type:'bar',
+  data:{labels:agingLabels,datasets:[{label:'TZS (B)',data:agingVals,backgroundColor:agingColors,borderRadius:2}]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'TZS '+c.parsed.y.toFixed(1)+'B'}}},
+    scales:{
+      x:{ticks:{font:{size:10},color:'#7a7672'},grid:{display:false}},
+      y:{ticks:{callback:v=>v+'B',font:{size:10},color:'#7a7672'},grid:{color:'rgba(0,0,0,0.05)'}}
+    }
+  }
+});
+
+new Chart(document.getElementById('agingDoughnut'),{
+  type:'doughnut',
+  data:{labels:agingLabels,datasets:[{data:agingVals,backgroundColor:agingColors,borderWidth:2,borderColor:'#faf8f4'}]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'right',labels:{font:{size:10},padding:8,color:'#3a3835'}},
+      tooltip:{callbacks:{label:c=>' '+c.label+': TZS '+c.parsed.toFixed(1)+'B ('+((c.parsed/agingVals.reduce((a,b)=>a+b,0))*100).toFixed(1)+'%)'}}
+    }
+  }
+});
+</script>
+</body>
+</html>
